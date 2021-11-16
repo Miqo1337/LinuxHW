@@ -1,0 +1,7 @@
+CC = g++
+CFLAGS = -O3
+all: dup.cpp
+	$(CC) dup.cpp $(CFLAGS) -o dup
+clear: 
+	rm dup
+	
