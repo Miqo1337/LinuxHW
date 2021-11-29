@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <memory>
 
 
 
@@ -32,15 +33,12 @@ int main(int argc, char const *argv[])
 		std::ostringstream err;
         err << "error occured during opening the file: " << argv[1] << "\n";
 		PROMT_ERROR(err.str().c_str(), errno_copy);
+        exit(EXIT_FAILURE);
     }
-    char *buf= new char[stbuf.st_size];
-    memset(buf, '\0', stbuf.st_size);
-
-    write(fd, buf, stbuf.st_size);
-
+    auto buf = std::make_unique<char[]>(stbuf.st_size);
+    //auto buf = std::unique_ptr<T>(new T)
+    memset(buf.get(), '\0', stbuf.st_size);
+    write(fd, buf.get(), stbuf.st_size);
     close(fd);
-
-    delete[] buf; 
-
     remove(argv[1]);
 }

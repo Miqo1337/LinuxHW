@@ -23,8 +23,6 @@
 int apply_to_file(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
     remove(fpath);
-    std::cout << sb->st_mode << "\n";
-    return 0;
 }
 
 

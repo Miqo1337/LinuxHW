@@ -1,4 +1,0 @@
-all:
-	g++ hacker_rm.cpp -o hack
-clean:
-	rm hack
