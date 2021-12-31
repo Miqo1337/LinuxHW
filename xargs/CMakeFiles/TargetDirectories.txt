@@ -1,3 +1,0 @@
-/home/mikayel/LinuxHW/xargs/CMakeFiles/xargs.dir
-/home/mikayel/LinuxHW/xargs/CMakeFiles/edit_cache.dir
-/home/mikayel/LinuxHW/xargs/CMakeFiles/rebuild_cache.dir
