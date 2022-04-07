@@ -1,0 +1,84 @@
+https://pastebin.com/CQYbPHdg
+
+#include <iostream>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <cerrno>
+#include <sstream>
+//void pipe(std::string yeyeasshaircut)
+//{
+//    int pipefd[2];
+//    int pipe_id = pipe(pipefd);
+//    if(pipe_id == -1)
+//    {
+//        perror(strerror(errno));
+//        exit(EXIT_FAILURE);
+//    }
+//    else {
+//        pid_t pid = fork();
+//        if (pid == -1) {
+//            perror(strerror(errno));
+//            exit(EXIT_FAILURE);
+//        } else if (pid == 0) {
+//            close(pipefd[0]);
+//            write(pipefd[1], argv[1], strlen((argv[1])));
+//            pid_t child_pid = getppid();
+//            std::cout << child_pid << " " << yeyeasshaircut;
+//        }
+//    }
+//    return;
+//}
+
+
+
+int main(int argc, char** argv)
+{
+    if(argc > 2)
+    {
+        std::cout << "Too many arguments\n";
+        exit(EXIT_FAILURE);
+    }
+    int pipefd[2];
+    int pipe_id = pipe(pipefd);
+    char buf;
+    if(pipe_id == -1)
+    {
+        perror(strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    else {
+
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror(strerror(errno));
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            close(pipefd[1]);
+            while(read(pipefd[0], &buf, 1) > 0)
+            {
+                write(STDOUT_FILENO, &buf, 1);
+            }
+            write(STDOUT_FILENO, "\n", 1);
+            close(pipefd[0]);
+            exit(EXIT_SUCCESS);
+        }
+        else
+        {
+            pid_t child_pid = getpid();
+            std::cout << "The pid of the parent " << getppid() << ", The pid of the child " << getpid() << "\n";
+            close(pipefd[0]);
+            std::stringstream ss;
+            ss << child_pid << " ";
+            write(pipefd[1], ss.str().c_str(), ss.str().size());
+            write(pipefd[1], argv[1], strlen(argv[1]));
+            close(pipefd[1]);
+            wait(NULL);
+            exit(EXIT_SUCCESS);
+        }
+    }
+}
